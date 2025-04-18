@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/interpreter.dir/src/Scanner.cpp.o CMakeFiles/interpreter.dir/src/main.cpp.o -o interpreter 
