@@ -1,6 +1,7 @@
 #include <string>
 #include <utility>
 #include <iostream>
+#include <iomanip>
 
 enum ErrorType {
     INVALID_TOKEN,
@@ -67,6 +68,28 @@ private:
         this->is_parsing_error = true;
     }
 
+    static void print_formatted_number(std::string& number_literal, bool decimal_found) {
+
+        const long double num = std::stold(number_literal);
+
+        std::ostringstream oss1;
+        oss1 << std::fixed << std::setprecision(4) << num;
+        std::string first = oss1.str();
+        first.erase(first.find_last_not_of('0') + 1);
+        if (first.back() == '.') {
+            first.pop_back();
+            decimal_found = false;
+        }
+
+        std::string second = first;
+
+        if (!decimal_found) {
+            second += ".0";
+        }
+
+        std::cout << "NUMBER " << first << " " << second << std::endl;
+    }
+
     void process_number_literal() {
         std::string number_literal;
         bool decimal_found = false;
@@ -75,7 +98,8 @@ private:
             if (std::isdigit(this->file_contents[this->char_number]) ||
                 (this->file_contents[this->char_number] == '.' && !decimal_found)) {
                 if (this->file_contents[this->char_number] == '.') {
-                    if (this->char_number < file_contents.size() - 1 && std::isdigit(this->file_contents[this->char_number + 1])) {
+                    if (this->char_number < file_contents.size() - 1 && std::isdigit(
+                            this->file_contents[this->char_number + 1])) {
                         decimal_found = true;
                     } else {
                         break;
@@ -90,11 +114,7 @@ private:
                 break;
             }
         }
-        if (decimal_places >= 4) {
-            printf("NUMBER %.4Lf %s\n", std::stold(number_literal), number_literal.c_str());
-        } else {
-            printf("NUMBER %s %s\n", number_literal.c_str(), (number_literal + (decimal_found ? "" : ".0")).c_str());
-        }
+        print_formatted_number(number_literal, decimal_found);
     }
 
     void interpret_character() {
@@ -178,7 +198,9 @@ private:
                 break;
             case '\n':
                 this->line_number++;
-            case ' ': case '\r': case '\t':
+            case ' ':
+            case '\r':
+            case '\t':
                 break;
 
             case '"':
