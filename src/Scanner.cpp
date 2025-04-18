@@ -67,11 +67,44 @@ private:
         this->is_parsing_error = true;
     }
 
+    void process_number_literal() {
+        std::string number_literal = "";
+        bool decimal_found = false;
+        while (this->char_number < file_contents.size()) {
+            if (std::isdigit(this->file_contents[this->char_number]) ||
+                (this->file_contents[this->char_number] == '.' && !decimal_found)) {
+                if (this->file_contents[this->char_number] == '.') {
+                    if (this->char_number < file_contents.size() - 1 && std::isdigit(this->file_contents[this->char_number + 1])) {
+                        decimal_found = true;
+                    } else {
+                        break;
+                    }
+                }
+                number_literal += this->file_contents[this->char_number];
+                this->char_number++;
+            } else {
+                break;
+            }
+        }
+        if (!decimal_found) {
+            number_literal += ".0";
+        }
+        std::cout << "NUMBER " << std::stold(number_literal) << " " << number_literal << std::endl;
+    }
+
     void interpret_character() {
         if (this->is_quote_open && this->file_contents[this->char_number] != '"') {
             this->current_literal += this->file_contents[this->char_number];
             return;
         }
+
+        if (std::isdigit(this->file_contents[this->char_number])) {
+            process_number_literal();
+            if (this->char_number == file_contents.size()) {
+                return;
+            }
+        }
+
         switch (this->file_contents[this->char_number]) {
             case '(':
                 std::cout << "LEFT_PAREN ( null" << std::endl;
@@ -140,10 +173,9 @@ private:
                 break;
             case '\n':
                 this->line_number++;
-            case ' ':
-            case '\r':
-            case '\t':
+            case ' ': case '\r': case '\t':
                 break;
+
             case '"':
                 if (!this->is_quote_open) {
                     this->is_quote_open = true;

@@ -1,5 +1,6 @@
 #include <cstring>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -11,6 +12,9 @@ int main(int argc, char *argv[]) {
     // Disable output buffering
     std::cout << std::unitbuf;
     std::cerr << std::unitbuf;
+
+    // Enable higher precision double conversion
+    std::cout << std::setprecision(20);
 
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     std::cerr << "Logs from your program will appear here!" << std::endl;
