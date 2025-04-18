@@ -2,6 +2,10 @@
 #include <utility>
 #include <iostream>
 
+enum ErrorType {
+    INVALID_TOKEN,
+    INCOMPLETE_LITERAL
+};
 class Scanner {
 public:
     explicit Scanner(std::string file_contents)
@@ -13,37 +17,60 @@ public:
 
     void interpret_file_contents() {
         if (!this->file_contents.empty()) {
-            for (int i = 0; i < file_contents.size(); i++) {
-                interpret_character(i);
+            for (; this->char_number < file_contents.size(); this->char_number++) {
+                interpret_character();
             }
+        }
+        if (this->is_quote_open) {
+            this->print_error(ErrorType::INCOMPLETE_LITERAL);
         }
         std::cout << "EOF  null" << std::endl;
     }
 
 private:
     std::string file_contents;
+    std::string current_literal;
     int line_number;
+    int char_number;
     bool is_parsing_error;
+    bool is_quote_open = false;
 
-    bool match_next_char(int& i, const char& c) const {
-        if (i + 1 == file_contents.size() || file_contents[i + 1] != c) {
+    bool match_next_char(const char& c) {
+        if (this->char_number + 1 == file_contents.size() || file_contents[this->char_number + 1] != c) {
             return false;
         }
-        i++;
+        this->char_number++;
         return true;
     }
 
-    void skip_to_next_line(int& i) {
-        while (i < file_contents.size() && file_contents[i] != '\n') {
-            i++;
+    void skip_to_next_line() {
+        while (this->char_number < file_contents.size() && file_contents[this->char_number] != '\n') {
+            this->char_number++;
         }
-        if (i < file_contents.size()) {
+        if (this->char_number < file_contents.size()) {
             this->line_number++;
         }
     }
 
-    void interpret_character(int& i) {
-        switch (this->file_contents[i]) {
+    void print_error(ErrorType error_type) {
+        switch (error_type) {
+            case INVALID_TOKEN:
+                fprintf(stderr, "[line %d] Error: Unexpected character: %c\n", this->line_number, this->file_contents[this->char_number]);
+                break;
+            case INCOMPLETE_LITERAL:
+                fprintf(stderr, "[line %d] Error: Unterminated string.\n", this->line_number);
+                break;
+            default:
+                fprintf(stderr, "[line %d] Error: Unexpected error.\n", this->line_number);
+                break;
+        }
+        if (!this->is_parsing_error) {
+            this->is_parsing_error = true;
+        }
+    }
+
+    void interpret_character() {
+        switch (this->file_contents[this->char_number]) {
             case '(':
                 std::cout << "LEFT_PAREN ( null" << std::endl;
                 break;
@@ -75,38 +102,38 @@ private:
                 std::cout << "MINUS - null" << std::endl;
                 break;
             case '!':
-                if (this->match_next_char(i, '=')) {
+                if (this->match_next_char('=')) {
                     std::cout << "BANG_EQUAL != null" << std::endl;
                 } else {
                     std::cout << "BANG ! null" << std::endl;
                 }
                 break;
             case '<':
-                if (this->match_next_char(i, '=')) {
+                if (this->match_next_char('=')) {
                     std::cout << "LESS_EQUAL <= null" << std::endl;
                 } else {
                     std::cout << "LESS < null" << std::endl;
                 }
                 break;
             case '>':
-                if (this->match_next_char(i, '=')) {
+                if (this->match_next_char('=')) {
                     std::cout << "GREATER_EQUAL >= null" << std::endl;
                 } else {
                     std::cout << "GREATER > null" << std::endl;
                 }
                 break;
             case '=':
-                if (this->match_next_char(i, '=')) {
+                if (this->match_next_char('=')) {
                     std::cout << "EQUAL_EQUAL == null" << std::endl;
                 } else {
                     std::cout << "EQUAL = null" << std::endl;
                 }
                 break;
             case '/':
-                if (!this->match_next_char(i, '/')) {
+                if (!this->match_next_char('/')) {
                     std::cout << "SLASH / null" << std::endl;
                 } else {
-                    skip_to_next_line(i);
+                    skip_to_next_line();
                 }
                 break;
             case '\n':
@@ -114,10 +141,25 @@ private:
             case ' ':
             case '\r':
             case '\t':
+                if (this->is_quote_open) {
+                    this->current_literal += this->file_contents[this->char_number];
+                }
+                break;
+            case '"':
+                if (!this->is_quote_open) {
+                    this->is_quote_open = true;
+                } else {
+                    std::cout << "STRING \"" << this->current_literal << "\" " << this->current_literal << std::endl;
+                    this->is_quote_open = false;
+                    this->current_literal = "";
+                }
                 break;
             default:
-                fprintf(stderr, "[line %d] Error: Unexpected character: %c\n", this->line_number, this->file_contents[i]);
-                this->is_parsing_error = true;
+                if (this->is_quote_open) {
+                    this->current_literal += this->file_contents[this->char_number];
+                } else {
+                    print_error(ErrorType::INVALID_TOKEN);
+                }
         }
     }
 };
