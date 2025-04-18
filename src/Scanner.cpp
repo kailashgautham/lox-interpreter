@@ -6,10 +6,12 @@ enum ErrorType {
     INVALID_TOKEN,
     INCOMPLETE_LITERAL
 };
+
 class Scanner {
 public:
     explicit Scanner(std::string file_contents)
-        : file_contents(std::move(file_contents)), line_number(1), is_parsing_error(false) { }
+        : file_contents(std::move(file_contents)), line_number(1), is_parsing_error(false) {
+    }
 
     [[nodiscard]] bool get_is_parsing_error() const {
         return this->is_parsing_error;
@@ -35,7 +37,7 @@ private:
     bool is_parsing_error;
     bool is_quote_open = false;
 
-    bool match_next_char(const char& c) {
+    bool match_next_char(const char &c) {
         if (this->char_number + 1 == file_contents.size() || file_contents[this->char_number + 1] != c) {
             return false;
         }
@@ -55,7 +57,8 @@ private:
     void print_error(const ErrorType error_type) {
         switch (error_type) {
             case INVALID_TOKEN:
-                fprintf(stderr, "[line %d] Error: Unexpected character: %c\n", this->line_number, this->file_contents[this->char_number]);
+                fprintf(stderr, "[line %d] Error: Unexpected character: %c\n", this->line_number,
+                        this->file_contents[this->char_number]);
                 break;
             case INCOMPLETE_LITERAL:
                 fprintf(stderr, "[line %d] Error: Unterminated string.\n", this->line_number);
@@ -65,6 +68,10 @@ private:
     }
 
     void interpret_character() {
+        if (this->is_quote_open && this->file_contents[this->char_number] != '"') {
+            this->current_literal += this->file_contents[this->char_number];
+            return;
+        }
         switch (this->file_contents[this->char_number]) {
             case '(':
                 std::cout << "LEFT_PAREN ( null" << std::endl;
@@ -128,11 +135,7 @@ private:
                 if (!this->match_next_char('/')) {
                     std::cout << "SLASH / null" << std::endl;
                 } else {
-                    if (this->is_quote_open) {
-                        this->current_literal += this->match_next_char('/');
-                    } else {
-                        skip_to_next_line();
-                    }
+                    skip_to_next_line();
                 }
                 break;
             case '\n':
@@ -140,9 +143,6 @@ private:
             case ' ':
             case '\r':
             case '\t':
-                if (this->is_quote_open) {
-                    this->current_literal += this->file_contents[this->char_number];
-                }
                 break;
             case '"':
                 if (!this->is_quote_open) {
@@ -154,11 +154,8 @@ private:
                 }
                 break;
             default:
-                if (this->is_quote_open) {
-                    this->current_literal += this->file_contents[this->char_number];
-                } else {
-                    print_error(ErrorType::INVALID_TOKEN);
-                }
+                print_error(ErrorType::INVALID_TOKEN);
+                break;
         }
     }
 };
