@@ -71,6 +71,7 @@ void interpret_character(const char& c) {
             break;
         case '*':
             std::cout << "STAR * null" << std::endl;
+            break;
         case '.':
             std::cout << "DOT . null";
             break;
