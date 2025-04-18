@@ -52,20 +52,15 @@ private:
         }
     }
 
-    void print_error(ErrorType error_type) {
+    void print_error(const ErrorType error_type) {
         switch (error_type) {
             case INVALID_TOKEN:
                 fprintf(stderr, "[line %d] Error: Unexpected character: %c\n", this->line_number, this->file_contents[this->char_number]);
+                this->is_parsing_error = true;
                 break;
             case INCOMPLETE_LITERAL:
                 fprintf(stderr, "[line %d] Error: Unterminated string.\n", this->line_number);
                 break;
-            default:
-                fprintf(stderr, "[line %d] Error: Unexpected error.\n", this->line_number);
-                break;
-        }
-        if (!this->is_parsing_error) {
-            this->is_parsing_error = true;
         }
     }
 
