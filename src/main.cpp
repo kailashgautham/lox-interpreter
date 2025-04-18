@@ -6,6 +6,8 @@
 
 std::string read_file_contents(const std::string& filename);
 
+void interpret_character(const char& c);
+
 int main(int argc, char *argv[]) {
     // Disable output buffering
     std::cout << std::unitbuf;
@@ -26,23 +28,7 @@ int main(int argc, char *argv[]) {
 
         if (!file_contents.empty()) {
             for (const char& c : file_contents) {
-                switch (c) {
-                    case '(':
-                        std::cout << "LEFT_PAREN ( null" << std::endl;
-                        break;
-                    case ')':
-                        std::cout << "RIGHT_PAREN ) null" << std::endl;
-                        break;
-                    case '{':
-                        std::cout << "LEFT_BRACE { null" << std::endl;
-                        break;
-                    case '}':
-                        std::cout << "RIGHT_BRACE } null" << std::endl;
-                        break;
-                    default:
-                        std::cout << "INVALID_CHAR " << c << " null" << std::endl;
-                        break;
-                }
+                interpret_character(c);
             }
         }
         std::cout << "EOF  null" << std::endl; // Placeholder, remove this line when implementing the scanner
@@ -67,4 +53,34 @@ std::string read_file_contents(const std::string& filename) {
     file.close();
 
     return buffer.str();
+}
+
+void interpret_character(const char& c) {
+    switch (c) {
+        case '(':
+            std::cout << "LEFT_PAREN ( null" << std::endl;
+            break;
+        case ')':
+            std::cout << "RIGHT_PAREN ) null" << std::endl;
+            break;
+        case '{':
+            std::cout << "LEFT_BRACE { null" << std::endl;
+            break;
+        case '}':
+            std::cout << "RIGHT_BRACE } null" << std::endl;
+            break;
+        case '*':
+            std::cout << "STAR * null" << std::endl;
+        case '.':
+            std::cout << "DOT . null";
+            break;
+        case ',':
+            std::cout << "COMMA , null" << std::endl;
+            break;
+        case '+':
+            std::cout << "PLUS + null" << std::endl;
+        default:
+            std::cout << "INVALID_CHAR " << c << " null" << std::endl;
+            break;
+    }
 }
