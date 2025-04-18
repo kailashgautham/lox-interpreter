@@ -93,7 +93,7 @@ bool interpret_character(int line_number, const char& c) {
             std::cout << "MINUS - null" << std::endl;
             break;
         default:
-            fprintf(stderr, "[Line %d] Error: Unexpected character: %c\n", line_number, c);
+            fprintf(stderr, "[line %d] Error: Unexpected character: %c\n", line_number, c);
             return false;
     }
     return true;
