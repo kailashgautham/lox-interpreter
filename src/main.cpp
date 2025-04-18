@@ -6,7 +6,7 @@
 
 std::string read_file_contents(const std::string& filename);
 
-void interpret_character(const char& c);
+void interpret_character(int line_number, const char& c);
 
 int main(int argc, char *argv[]) {
     // Disable output buffering
@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
 
         if (!file_contents.empty()) {
             for (const char& c : file_contents) {
-                interpret_character(c);
+                interpret_character(1, c);
             }
         }
         std::cout << "EOF  null" << std::endl; // Placeholder, remove this line when implementing the scanner
@@ -55,7 +55,7 @@ std::string read_file_contents(const std::string& filename) {
     return buffer.str();
 }
 
-void interpret_character(const char& c) {
+void interpret_character(int line_number, const char& c) {
     switch (c) {
         case '(':
             std::cout << "LEFT_PAREN ( null" << std::endl;
@@ -88,7 +88,7 @@ void interpret_character(const char& c) {
             std::cout << "MINUS - null" << std::endl;
             break;
         default:
-            std::cout << "INVALID_CHAR " << c << " null" << std::endl;
+            fprintf(stderr, "[Line %d] Error: Unexpected character: %c\n", line_number, c);
             break;
     }
 }
