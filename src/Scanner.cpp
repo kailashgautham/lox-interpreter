@@ -68,8 +68,9 @@ private:
     }
 
     void process_number_literal() {
-        std::string number_literal = "";
+        std::string number_literal;
         bool decimal_found = false;
+        int decimal_places = 0;
         while (this->char_number < file_contents.size()) {
             if (std::isdigit(this->file_contents[this->char_number]) ||
                 (this->file_contents[this->char_number] == '.' && !decimal_found)) {
@@ -80,16 +81,20 @@ private:
                         break;
                     }
                 }
+                if (decimal_found && std::isdigit(this->file_contents[this->char_number])) {
+                    decimal_places++;
+                }
                 number_literal += this->file_contents[this->char_number];
                 this->char_number++;
             } else {
                 break;
             }
         }
-        if (!decimal_found) {
-            number_literal += ".0";
+        if (decimal_places >= 4) {
+            printf("NUMBER %.4Lf %s\n", std::stold(number_literal), number_literal.c_str());
+        } else {
+            printf("NUMBER %s %s\n", number_literal.c_str(), (number_literal + (decimal_found ? "" : ".0")).c_str());
         }
-        std::cout << "NUMBER " << std::stold(number_literal) << " " << number_literal << std::endl;
     }
 
     void interpret_character() {
