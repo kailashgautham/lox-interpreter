@@ -33,9 +33,12 @@ private:
         return true;
     }
 
-    void skip_to_next_line(int& i) const {
+    void skip_to_next_line(int& i) {
         while (i < file_contents.size() && file_contents[i] != '\n') {
             i++;
+        }
+        if (i < file_contents.size()) {
+            this->line_number++;
         }
     }
 
