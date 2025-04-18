@@ -3,10 +3,9 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include "Scanner.cpp"
 
 std::string read_file_contents(const std::string& filename);
-
-bool interpret_character(int line_number, const char& c);
 
 int main(int argc, char *argv[]) {
     // Disable output buffering
@@ -24,17 +23,13 @@ int main(int argc, char *argv[]) {
     const std::string command = argv[1];
 
     if (command == "tokenize") {
-        std::string file_contents = read_file_contents(argv[2]);
-        bool parsing_error = false;
-        if (!file_contents.empty()) {
-            for (const char& c : file_contents) {
-                if (!interpret_character(1, c)) {
-                    parsing_error = true;
-                }
-            }
-        }
-        std::cout << "EOF  null" << std::endl; // Placeholder, remove this line when implementing the scanner
-        if (parsing_error) {
+        const std::string file_contents = read_file_contents(argv[2]);
+        auto* scanner = new Scanner(file_contents);
+        scanner->interpret_file_contents();
+        const bool is_parsing_error = scanner->get_is_parsing_error();
+        delete scanner;
+        if (is_parsing_error) {
+
             return 65;
         }
         return 0;
@@ -58,43 +53,4 @@ std::string read_file_contents(const std::string& filename) {
     file.close();
 
     return buffer.str();
-}
-
-bool interpret_character(int line_number, const char& c) {
-    switch (c) {
-        case '(':
-            std::cout << "LEFT_PAREN ( null" << std::endl;
-            break;
-        case ')':
-            std::cout << "RIGHT_PAREN ) null" << std::endl;
-            break;
-        case '{':
-            std::cout << "LEFT_BRACE { null" << std::endl;
-            break;
-        case '}':
-            std::cout << "RIGHT_BRACE } null" << std::endl;
-            break;
-        case '*':
-            std::cout << "STAR * null" << std::endl;
-            break;
-        case '.':
-            std::cout << "DOT . null" << std::endl;
-            break;
-        case ',':
-            std::cout << "COMMA , null" << std::endl;
-            break;
-        case ';':
-            std::cout << "SEMICOLON ; null" << std::endl;
-            break;
-        case '+':
-            std::cout << "PLUS + null" << std::endl;
-            break;
-        case '-':
-            std::cout << "MINUS - null" << std::endl;
-            break;
-        default:
-            fprintf(stderr, "[line %d] Error: Unexpected character: %c\n", line_number, c);
-            return false;
-    }
-    return true;
 }
