@@ -56,12 +56,12 @@ private:
         switch (error_type) {
             case INVALID_TOKEN:
                 fprintf(stderr, "[line %d] Error: Unexpected character: %c\n", this->line_number, this->file_contents[this->char_number]);
-                this->is_parsing_error = true;
                 break;
             case INCOMPLETE_LITERAL:
                 fprintf(stderr, "[line %d] Error: Unterminated string.\n", this->line_number);
                 break;
         }
+        this->is_parsing_error = true;
     }
 
     void interpret_character() {
