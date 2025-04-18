@@ -75,14 +75,13 @@ private:
         std::ostringstream oss1;
         oss1 << std::fixed << std::setprecision(4) << num;
         std::string first = oss1.str();
-        first.erase(first.find_last_not_of('0') + 1);
-        if (first.back() == '.') {
-            first.pop_back();
+        first = first.substr(0, std::min(number_literal.size(), first.size()));
+        std::string second = oss1.str();
+        second.erase(second.find_last_not_of('0') + 1);
+        if (second.back() == '.') {
             decimal_found = false;
+            second.pop_back();
         }
-
-        std::string second = first;
-
         if (!decimal_found) {
             second += ".0";
         }
