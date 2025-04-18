@@ -101,6 +101,7 @@ private:
                     this->is_commented_out = true;
                 }
                 break;
+            case '\t':
             case ' ':
                 break;
             default:
