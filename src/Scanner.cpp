@@ -128,7 +128,11 @@ private:
                 if (!this->match_next_char('/')) {
                     std::cout << "SLASH / null" << std::endl;
                 } else {
-                    skip_to_next_line();
+                    if (this->is_quote_open) {
+                        this->current_literal += this->match_next_char('/');
+                    } else {
+                        skip_to_next_line();
+                    }
                 }
                 break;
             case '\n':
