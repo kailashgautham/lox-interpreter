@@ -13,7 +13,7 @@ public:
 
     void interpret_file_contents() {
         if (!this->file_contents.empty()) {
-            for (int i = 0; i < file_contents.size(); i++) {
+            for (int i = 0; i < file_contents.size() && !this->is_commented_out; i++) {
                 interpret_character(i);
             }
         }
@@ -24,9 +24,10 @@ private:
     std::string file_contents;
     int line_number;
     bool is_parsing_error;
+    bool is_commented_out = false;
 
-    bool match_next_equal(int& i) const {
-        if (i + 1 == file_contents.size() || file_contents[i + 1] != '=') {
+    bool match_next_char(int& i, const char& c) const {
+        if (i + 1 == file_contents.size() || file_contents[i + 1] != c) {
             return false;
         }
         i++;
@@ -66,31 +67,38 @@ private:
                 std::cout << "MINUS - null" << std::endl;
                 break;
             case '!':
-                if (match_next_equal(i)) {
+                if (match_next_char(i, '=')) {
                     std::cout << "BANG_EQUAL != null" << std::endl;
                 } else {
                     std::cout << "BANG ! null" << std::endl;
                 }
                 break;
             case '<':
-                if (match_next_equal(i)) {
+                if (match_next_char(i, '=')) {
                     std::cout << "LESS_EQUAL <= null" << std::endl;
                 } else {
                     std::cout << "LESS < null" << std::endl;
                 }
                 break;
             case '>':
-                if (match_next_equal(i)) {
+                if (match_next_char(i, '=')) {
                     std::cout << "GREATER_EQUAL >= null" << std::endl;
                 } else {
                     std::cout << "GREATER > null" << std::endl;
                 }
                 break;
             case '=':
-                if (match_next_equal(i)) {
+                if (match_next_char(i, '=')) {
                     std::cout << "EQUAL_EQUAL == null" << std::endl;
                 } else {
                     std::cout << "EQUAL = null" << std::endl;
+                }
+                break;
+            case '/':
+                if (!match_next_char(i, '/')) {
+                    std::cout << "SLASH / null" << std::endl;
+                } else {
+                    this->is_commented_out = true;
                 }
                 break;
             default:
