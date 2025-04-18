@@ -67,7 +67,7 @@ private:
                 break;
             case '=':
                 if (match_next_same(i, '=')) {
-                    std::cout << "EQUAL EQUAL == null" << std::endl;
+                    std::cout << "EQUAL_EQUAL == null" << std::endl;
                 } else {
                     std::cout << "EQUAL = null" << std::endl;
                 }
