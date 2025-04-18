@@ -81,7 +81,7 @@ private:
                 break;
             case '>':
                 if (match_next_equal(i)) {
-                    std::cout << "GREATER_EQUAL != null" << std::endl;
+                    std::cout << "GREATER_EQUAL >= null" << std::endl;
                 } else {
                     std::cout << "GREATER > null" << std::endl;
                 }
