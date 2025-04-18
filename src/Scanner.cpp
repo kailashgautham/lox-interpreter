@@ -72,6 +72,20 @@ private:
                     std::cout << "BANG ! null" << std::endl;
                 }
                 break;
+            case '<':
+                if (match_next_equal(i)) {
+                    std::cout << "LESS_EQUAL <= null" << std::endl;
+                } else {
+                    std::cout << "LESS < null" << std::endl;
+                }
+                break;
+            case '>':
+                if (match_next_equal(i)) {
+                    std::cout << "GREATER_EQUAL != null" << std::endl;
+                } else {
+                    std::cout << "GREATER > null" << std::endl;
+                }
+                break;
             case '=':
                 if (match_next_equal(i)) {
                     std::cout << "EQUAL_EQUAL == null" << std::endl;
