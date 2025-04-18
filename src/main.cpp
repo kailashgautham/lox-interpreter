@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
                         std::cout << "LEFT_PAREN ( null" << std::endl;
                         break;
                     case ')':
-                        std::cout << "RIGHT_PAREN ( null" << std::endl;
+                        std::cout << "RIGHT_PAREN ) null" << std::endl;
                         break;
                     case '{':
                         std::cout << "LEFT_BRACE { null" << std::endl;
