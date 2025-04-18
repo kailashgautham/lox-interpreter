@@ -73,7 +73,7 @@ void interpret_character(const char& c) {
             std::cout << "STAR * null" << std::endl;
             break;
         case '.':
-            std::cout << "DOT . null";
+            std::cout << "DOT . null" << std::endl;
             break;
         case ',':
             std::cout << "COMMA , null" << std::endl;
