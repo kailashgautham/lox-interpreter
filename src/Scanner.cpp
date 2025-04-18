@@ -25,8 +25,8 @@ private:
     int line_number;
     bool is_parsing_error;
 
-    bool match_next_same(int& i, const char& c) const {
-        if (i + 1 == file_contents.size() || file_contents[i + 1] != c) {
+    bool match_next_equal(int& i) const {
+        if (i + 1 == file_contents.size() || file_contents[i + 1] != '=') {
             return false;
         }
         i++;
@@ -65,8 +65,15 @@ private:
             case '-':
                 std::cout << "MINUS - null" << std::endl;
                 break;
+            case '!':
+                if (match_next_equal(i)) {
+                    std::cout << "BANG_EQUAL != null" << std::endl;
+                } else {
+                    std::cout << "BANG ! null" << std::endl;
+                }
+                break;
             case '=':
-                if (match_next_same(i, '=')) {
+                if (match_next_equal(i)) {
                     std::cout << "EQUAL_EQUAL == null" << std::endl;
                 } else {
                     std::cout << "EQUAL = null" << std::endl;
