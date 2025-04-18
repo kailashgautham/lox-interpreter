@@ -2,6 +2,8 @@
 #include <utility>
 #include <iostream>
 #include <iomanip>
+#include <unordered_map>
+#include <unordered_set>
 
 enum ErrorType {
     INVALID_TOKEN,
@@ -37,6 +39,12 @@ private:
     int char_number;
     bool is_parsing_error;
     bool is_quote_open = false;
+    std::unordered_map<std::string, std::string> reserved_words = {
+        {"and", "AND"}, {"class", "CLASS"}, {"else", "ELSE"}, {"false", "FALSE"},
+        {"for", "FOR"}, {"fun", "FUN"}, {"if", "IF"}, {"nil", "NIL"},
+        {"or", "OR"}, {"print", "PRINT"}, {"return", "RETURN"}, {"super", "SUPER"},
+        {"this", "THIS"}, {"true", "TRUE"}, {"var", "VAR"}, {"while", "WHILE"}
+    };
 
     bool match_next_char(const char &c) {
         if (this->char_number + 1 == file_contents.size() || file_contents[this->char_number + 1] != c) {
@@ -68,7 +76,7 @@ private:
         this->is_parsing_error = true;
     }
 
-    static void print_formatted_number(std::string &number_literal, bool decimal_found) {
+    static void print_formatted_number(const std::string &number_literal, bool decimal_found) {
         const long double num = std::stold(number_literal);
 
         std::ostringstream oss1;
@@ -125,7 +133,11 @@ private:
                 break;
             }
         }
-        std::cout << "IDENTIFIER " << identifier << " null" << std::endl;
+        if (this->reserved_words.contains(identifier)) {
+            std::cout << reserved_words[identifier] << " " << identifier << " null" << std::endl;
+        } else {
+            std::cout << "IDENTIFIER " << identifier << " null" << std::endl;
+        }
     }
 
     void interpret_character() {
