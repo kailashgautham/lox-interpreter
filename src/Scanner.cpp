@@ -102,6 +102,7 @@ private:
                 }
                 break;
             case ' ':
+            case '\n':
             case '\r':
             case '\t':
                 break;
