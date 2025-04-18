@@ -101,8 +101,9 @@ private:
                     this->is_commented_out = true;
                 }
                 break;
-            case '\t':
             case ' ':
+            case '\r':
+            case '\t':
                 break;
             default:
                 fprintf(stderr, "[line %d] Error: Unexpected character: %c\n", line_number, this->file_contents[i]);
