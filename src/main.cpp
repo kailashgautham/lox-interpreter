@@ -26,8 +26,8 @@ int main(int argc, char *argv[]) {
 
         if (!file_contents.empty()) {
             for (char c : file_contents) {
-                if (c == '(') std::cout << "LEFT_PAREN ( NULL" << std::endl;
-                else if (c == ')') std::cout << "RIGHT_PAREN ) NULL" << std::endl;
+                if (c == '(') std::cout << "LEFT_PAREN ( null" << std::endl;
+                else if (c == ')') std::cout << "RIGHT_PAREN ) null" << std::endl;
             }
         }
         std::cout << "EOF  null" << std::endl; // Placeholder, remove this line when implementing the scanner
