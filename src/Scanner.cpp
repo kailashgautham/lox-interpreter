@@ -67,48 +67,49 @@ private:
                 std::cout << "MINUS - null" << std::endl;
                 break;
             case '!':
-                if (match_next_char(i, '=')) {
+                if (this->match_next_char(i, '=')) {
                     std::cout << "BANG_EQUAL != null" << std::endl;
                 } else {
                     std::cout << "BANG ! null" << std::endl;
                 }
                 break;
             case '<':
-                if (match_next_char(i, '=')) {
+                if (this->match_next_char(i, '=')) {
                     std::cout << "LESS_EQUAL <= null" << std::endl;
                 } else {
                     std::cout << "LESS < null" << std::endl;
                 }
                 break;
             case '>':
-                if (match_next_char(i, '=')) {
+                if (this->match_next_char(i, '=')) {
                     std::cout << "GREATER_EQUAL >= null" << std::endl;
                 } else {
                     std::cout << "GREATER > null" << std::endl;
                 }
                 break;
             case '=':
-                if (match_next_char(i, '=')) {
+                if (this->match_next_char(i, '=')) {
                     std::cout << "EQUAL_EQUAL == null" << std::endl;
                 } else {
                     std::cout << "EQUAL = null" << std::endl;
                 }
                 break;
             case '/':
-                if (!match_next_char(i, '/')) {
+                if (!this->match_next_char(i, '/')) {
                     std::cout << "SLASH / null" << std::endl;
                 } else {
                     this->is_commented_out = true;
                 }
                 break;
-            case ' ':
             case '\n':
+                this->line_number++;
+            case ' ':
             case '\r':
             case '\t':
                 break;
             default:
-                fprintf(stderr, "[line %d] Error: Unexpected character: %c\n", line_number, this->file_contents[i]);
-                is_parsing_error = true;
+                fprintf(stderr, "[line %d] Error: Unexpected character: %c\n", this->line_number, this->file_contents[i]);
+                this->is_parsing_error = true;
         }
     }
 };
