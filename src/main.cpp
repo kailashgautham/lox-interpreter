@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     std::cerr << std::unitbuf;
 
     // Enable higher precision double conversion
-    std::cout << std::setprecision(20);
+    std::cout << std::setprecision(4);
 
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     std::cerr << "Logs from your program will appear here!" << std::endl;
