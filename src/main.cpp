@@ -6,7 +6,7 @@
 
 std::string read_file_contents(const std::string& filename);
 
-void interpret_character(int line_number, const char& c);
+bool interpret_character(int line_number, const char& c);
 
 int main(int argc, char *argv[]) {
     // Disable output buffering
@@ -25,14 +25,19 @@ int main(int argc, char *argv[]) {
 
     if (command == "tokenize") {
         std::string file_contents = read_file_contents(argv[2]);
-
+        bool parsing_error = false;
         if (!file_contents.empty()) {
             for (const char& c : file_contents) {
-                interpret_character(1, c);
+                if (!interpret_character(1, c)) {
+                    parsing_error = true;
+                }
             }
         }
         std::cout << "EOF  null" << std::endl; // Placeholder, remove this line when implementing the scanner
-        
+        if (parsing_error) {
+            return 65;
+        }
+        return 0;
     } else {
         std::cerr << "Unknown command: " << command << std::endl;
         return 1;
@@ -55,7 +60,7 @@ std::string read_file_contents(const std::string& filename) {
     return buffer.str();
 }
 
-void interpret_character(int line_number, const char& c) {
+bool interpret_character(int line_number, const char& c) {
     switch (c) {
         case '(':
             std::cout << "LEFT_PAREN ( null" << std::endl;
