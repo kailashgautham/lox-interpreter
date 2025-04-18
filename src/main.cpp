@@ -94,6 +94,7 @@ bool interpret_character(int line_number, const char& c) {
             break;
         default:
             fprintf(stderr, "[Line %d] Error: Unexpected character: %c\n", line_number, c);
-            break;
+            return false;
     }
+    return true;
 }
