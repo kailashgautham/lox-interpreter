@@ -77,8 +77,15 @@ void interpret_character(const char& c) {
         case ',':
             std::cout << "COMMA , null" << std::endl;
             break;
+        case ';':
+            std::cout << "SEMICOLON ; null" << std::endl;
+            break;
         case '+':
             std::cout << "PLUS + null" << std::endl;
+            break;
+        case '-':
+            std::cout << "MINUS - null" << std::endl;
+            break;
         default:
             std::cout << "INVALID_CHAR " << c << " null" << std::endl;
             break;
