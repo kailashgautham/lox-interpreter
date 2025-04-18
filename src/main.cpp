@@ -29,7 +29,6 @@ int main(int argc, char *argv[]) {
         const bool is_parsing_error = scanner->get_is_parsing_error();
         delete scanner;
         if (is_parsing_error) {
-
             return 65;
         }
         return 0;

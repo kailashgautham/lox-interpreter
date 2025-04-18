@@ -13,7 +13,7 @@ public:
 
     void interpret_file_contents() {
         if (!this->file_contents.empty()) {
-            for (int i = 0; i < file_contents.size() && !this->is_commented_out; i++) {
+            for (int i = 0; i < file_contents.size(); i++) {
                 interpret_character(i);
             }
         }
@@ -24,7 +24,6 @@ private:
     std::string file_contents;
     int line_number;
     bool is_parsing_error;
-    bool is_commented_out = false;
 
     bool match_next_char(int& i, const char& c) const {
         if (i + 1 == file_contents.size() || file_contents[i + 1] != c) {
@@ -32,6 +31,12 @@ private:
         }
         i++;
         return true;
+    }
+
+    void skip_to_next_line(int& i) const {
+        while (i < file_contents.size() && file_contents[i] != '\n') {
+            i++;
+        }
     }
 
     void interpret_character(int& i) {
@@ -98,7 +103,7 @@ private:
                 if (!this->match_next_char(i, '/')) {
                     std::cout << "SLASH / null" << std::endl;
                 } else {
-                    this->is_commented_out = true;
+                    skip_to_next_line(i);
                 }
                 break;
             case '\n':
