@@ -68,8 +68,7 @@ private:
         this->is_parsing_error = true;
     }
 
-    static void print_formatted_number(std::string& number_literal, bool decimal_found) {
-
+    static void print_formatted_number(std::string &number_literal, bool decimal_found) {
         const long double num = std::stold(number_literal);
 
         std::ostringstream oss1;
@@ -116,6 +115,19 @@ private:
         print_formatted_number(number_literal, decimal_found);
     }
 
+    void process_identifier() {
+        std::string identifier;
+        while (this->char_number < file_contents.size()) {
+            if (std::isalnum(this->file_contents[this->char_number]) || this->file_contents[this->char_number] == '_') {
+                identifier += this->file_contents[this->char_number];
+                this->char_number++;
+            } else {
+                break;
+            }
+        }
+        std::cout << "IDENTIFIER " << identifier << " null" << std::endl;
+    }
+
     void interpret_character() {
         if (this->is_quote_open && this->file_contents[this->char_number] != '"') {
             this->current_literal += this->file_contents[this->char_number];
@@ -124,6 +136,13 @@ private:
 
         if (std::isdigit(this->file_contents[this->char_number])) {
             process_number_literal();
+            if (this->char_number == file_contents.size()) {
+                return;
+            }
+        }
+
+        if (std::isalpha(this->file_contents[this->char_number]) || this->file_contents[this->char_number] == '_') {
+            process_identifier();
             if (this->char_number == file_contents.size()) {
                 return;
             }
