@@ -31,8 +31,25 @@ private:
         }
 
         else if (std::isalpha(this->file_contents[this->char_number])) {
-            process_keyword();
+            std::cout << process_keyword() << std::endl;
         }
+
+        else if (this->file_contents[this->char_number] == '"') {
+            this->char_number++;
+            process_string_literal();
+        }
+    }
+
+    void process_string_literal() {
+        std::string expr;
+        while (this->char_number < file_contents.size() && this->file_contents[this->char_number] != '"') {
+            expr += this->process_keyword();
+            if (this->char_number < file_contents.size() && this->file_contents[this->char_number] != '"') {
+                expr += this->file_contents[this->char_number];
+                this->char_number++;
+            }
+        }
+        std::cout << expr << std::endl;
     }
 
 
@@ -66,15 +83,15 @@ private:
         std::cout << number_literal << std::endl;
     }
 
-    void process_keyword() {
+    std::string process_keyword() {
         std::string expr;
         while (this->char_number < file_contents.size()) {
-            if (std::isspace(this->file_contents[this->char_number])) {
+            if (std::isspace(this->file_contents[this->char_number]) || this->file_contents[this->char_number] == '"') {
                 break;
             }
             expr += this->file_contents[this->char_number];
             this->char_number++;
         }
-        std::cout << expr << std::endl;
+        return expr;
     }
 };
