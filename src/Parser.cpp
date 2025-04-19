@@ -26,6 +26,47 @@ private:
     bool is_parsing_error;
 
     void process_expr() {
+        if (std::isdigit(this->file_contents[this->char_number])) {
+            process_number_literal();
+        }
+
+        else if (std::isalpha(this->file_contents[this->char_number])) {
+            process_keyword();
+        }
+    }
+
+
+    void process_number_literal() {
+        std::string number_literal;
+        bool decimal_found = false;
+        int decimal_places = 0;
+        while (this->char_number < file_contents.size()) {
+            if (std::isdigit(this->file_contents[this->char_number]) ||
+                (this->file_contents[this->char_number] == '.' && !decimal_found)) {
+                if (this->file_contents[this->char_number] == '.') {
+                    if (this->char_number < file_contents.size() - 1 && std::isdigit(
+                            this->file_contents[this->char_number + 1])) {
+                        decimal_found = true;
+                            } else {
+                                break;
+                            }
+                }
+                if (decimal_found && std::isdigit(this->file_contents[this->char_number])) {
+                    decimal_places++;
+                }
+                number_literal += this->file_contents[this->char_number];
+                this->char_number++;
+                } else {
+                    break;
+                }
+        }
+        if (!decimal_found) {
+            number_literal += ".0";
+        }
+        std::cout << number_literal << std::endl;
+    }
+
+    void process_keyword() {
         std::string expr;
         while (this->char_number < file_contents.size()) {
             if (std::isspace(this->file_contents[this->char_number])) {
