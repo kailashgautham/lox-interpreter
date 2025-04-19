@@ -4,7 +4,8 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include "Scanner.cpp"
+#include "Tokenizer.cpp"
+#include "Parser.cpp"
 
 std::string read_file_contents(const std::string& filename);
 
@@ -17,7 +18,7 @@ int main(int argc, char *argv[]) {
     std::cerr << "Logs from your program will appear here!" << std::endl;
 
     if (argc < 3) {
-        std::cerr << "Usage: ./your_program tokenize <filename>" << std::endl;
+        std::cerr << "Usage: ./your_program <command> <filename>" << std::endl;
         return 1;
     }
 
@@ -25,19 +26,22 @@ int main(int argc, char *argv[]) {
 
     if (command == "tokenize") {
         const std::string file_contents = read_file_contents(argv[2]);
-        auto* scanner = new Scanner(file_contents);
+        auto* scanner = new Tokenizer(file_contents);
         scanner->interpret_file_contents();
         const bool is_parsing_error = scanner->get_is_parsing_error();
         delete scanner;
         if (is_parsing_error) {
             return 65;
         }
-        return 0;
+    } else if (command == "parse") {
+        const std::string file_contents = read_file_contents(argv[2]);
+        auto* parser = new Parser(file_contents);
+        parser->interpret_file_contents();
+        delete parser;
     } else {
         std::cerr << "Unknown command: " << command << std::endl;
         return 1;
     }
-
     return 0;
 }
 

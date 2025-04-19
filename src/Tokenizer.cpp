@@ -10,10 +10,10 @@ enum ErrorType {
     INCOMPLETE_LITERAL
 };
 
-class Scanner {
+class Tokenizer {
 public:
-    explicit Scanner(std::string file_contents)
-        : file_contents(std::move(file_contents)), line_number(1), is_parsing_error(false) {
+    explicit Tokenizer(std::string file_contents)
+        : file_contents(std::move(file_contents)), line_number(1), char_number(0), is_parsing_error(false) {
     }
 
     [[nodiscard]] bool get_is_parsing_error() const {
